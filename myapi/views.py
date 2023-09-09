@@ -11,9 +11,11 @@ def index(request):
 def week(request):
     dict={}
     j=1
+    id="id"+str(j)
     for i in list(dsa.objects.values()):
-        dict[j]=i
+        dict[id]=i
         j+=1
+        id="id"+str(j)
     return JsonResponse(dict)
     
     
