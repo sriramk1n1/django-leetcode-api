@@ -8,6 +8,7 @@ class users(models.Model):
     user_name=models.CharField(max_length=20)
     total=models.IntegerField(blank=True,null=True)
     today=models.IntegerField(default=0)
+    week=models.IntegerField(default=0)
     def __str__(self):
         return self.user_name
     

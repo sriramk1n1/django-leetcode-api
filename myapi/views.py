@@ -44,6 +44,14 @@ def leaderboardall(request):
         dict[j]=i
         j+=1
     return JsonResponse(dict)
+
+def leaderboardweek(request):
+    dict={}
+    j=1
+    for i in list(users.objects.order_by("-week").values()):
+        dict[j]=i
+        j+=1
+    return JsonResponse(dict)
     
 def sync(request):
     for i in users.objects.all():
