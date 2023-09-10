@@ -1,15 +1,18 @@
 from django.shortcuts import render
-from .models import dsa,users
+from .models import dsa,users,visits
 from django.http import HttpResponse, JsonResponse
 import requests
 import json
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+    return HttpResponse("API for questions-list.vercel.app")
 
 def week(request):
-    dict={}
+    v=visits.objects.get(id=1)
+    v.no+=1
+    v.save()
+    dict={} 
     j=1
     id="id"+str(j)
     for i in list(dsa.objects.values()):
@@ -19,15 +22,11 @@ def week(request):
     return JsonResponse(dict)
     
     
-def progress(request):
-    dict={}
-    j=1
-    for i in list(users.objects.values()):
-        dict[j]=i
-        j+=1
-    return JsonResponse(dict)
     
 def leaderboard(request):
+    v=visits.objects.get(id=2)
+    v.no+=1
+    v.save()
     dict={}
     j=1
     for i in list(users.objects.order_by("-today").values()):
@@ -36,6 +35,9 @@ def leaderboard(request):
     return JsonResponse(dict)
     
 def leaderboardall(request):
+    v=visits.objects.get(id=3)
+    v.no+=1
+    v.save()
     dict={}
     j=1
     for i in list(users.objects.order_by("-total").values()):

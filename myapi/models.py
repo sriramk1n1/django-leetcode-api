@@ -23,3 +23,6 @@ class dsa(models.Model):
 
     def __str__(self):
         return "Week " + str(self.weekno)
+
+class visits(models.Model):
+    no=models.IntegerField(default=0)
