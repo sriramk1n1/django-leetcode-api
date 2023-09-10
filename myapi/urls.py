@@ -9,5 +9,7 @@ urlpatterns = [
     path("leaderboard-all", views.leaderboardall, name="leaderboardall"),
     path("leaderboard-week", views.leaderboardweek, name="leaderboardweek"),
     path("sync", views.sync, name="sync"),
-    path("evaluate", views.evaluate, name="evaluate")
+    path("syncweek", views.syncweek, name="syncweek"),
+    path("evaluate", views.evaluate, name="evaluate"),
+    path("evaluate-week", views.evaluateweek, name="evaluate-week")
 ]

@@ -61,7 +61,14 @@ def sync(request):
         i.total=obj["totalSolved"]
         i.save()
     return HttpResponse("Success")
-
+def syncweek(request):
+    for i in users.objects.all():
+        name=i.user_name
+        url="https://leetcode-stats-api.herokuapp.com/"+name
+        obj = requests.get(url).json()
+        i.totalweek=obj["totalSolved"]
+        i.save()
+    return HttpResponse("Success")
 
 def evaluate(request):
     for i in users.objects.all():
@@ -72,4 +79,14 @@ def evaluate(request):
         i.today=total-i.total
         i.save()
     return HttpResponse("Success")
+
+def evaluateweek(request):
+    for i in users.objects.all():
+        name=i.user_name
+        url="https://leetcode-stats-api.herokuapp.com/"+name
+        obj= requests.get(url).json()
+        total=obj["totalSolved"]
+        i.week=total-i.totalweek
+        i.save()
+    return HttpResponse("success")
 
