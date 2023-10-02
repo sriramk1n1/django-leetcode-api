@@ -3,6 +3,8 @@ from .models import dsa,users,visits
 from django.http import HttpResponse, JsonResponse
 import requests
 import json
+import time
+from concurrent.futures import ThreadPoolExecutor
 
 
 def index(request):
@@ -52,41 +54,62 @@ def leaderboardweek(request):
         dict[j]=i
         j+=1
     return JsonResponse(dict)
-    
+
+def func1(i):
+    name=i.user_name
+    url="http://127.0.0.1:8080/"+name
+    obj = requests.get(url).json()
+    i.total=obj["totalSolved"]
+    i.save()
+
 def sync(request):
+    executor = ThreadPoolExecutor(max_workers=10)
     for i in users.objects.all():
-        name=i.user_name
-        url="https://leetcode-stats-api.herokuapp.com/"+name
-        obj = requests.get(url).json()
-        i.total=obj["totalSolved"]
-        i.save()
-    return HttpResponse("Success")
+        executor.submit(func1,i)
+    executor.shutdown(wait=True)
+    return HttpResponse("Successfuldone")
+
+def func2(i):
+    name=i.user_name
+    url="http://127.0.0.1:8080/"+name
+    obj = requests.get(url).json()
+    i.totalweek=obj["totalSolved"]
+    i.save()
+    
 def syncweek(request):
+    executor = ThreadPoolExecutor(max_workers=10)
     for i in users.objects.all():
-        name=i.user_name
-        url="https://leetcode-stats-api.herokuapp.com/"+name
-        obj = requests.get(url).json()
-        i.totalweek=obj["totalSolved"]
-        i.save()
-    return HttpResponse("Success")
+        executor.submit(func2,i)
+    executor.shutdown(wait=True)
+    return HttpResponse("Successfuldone")
+
+def func3(i):
+    name=i.user_name
+    url="http://127.0.0.1:8080/"+name
+    obj = requests.get(url).json()
+    total=obj["totalSolved"]
+    i.today=total-i.total
+    i.save()
 
 def evaluate(request):
+    executor = ThreadPoolExecutor(max_workers=10)
     for i in users.objects.all():
-        name=i.user_name
-        url="https://leetcode-stats-api.herokuapp.com/"+name
-        obj = requests.get(url).json()
-        total=obj["totalSolved"]
-        i.today=total-i.total
-        i.save()
-    return HttpResponse("Success")
+        executor.submit(func3,i)
+    executor.shutdown(wait=True)
+    return HttpResponse("Successfuldone")
+        
+def func4(i):
+    name=i.user_name
+    url="http://127.0.0.1:8080/"+name
+    obj= requests.get(url).json()
+    total=obj["totalSolved"]
+    i.week=total-i.totalweek
+    i.save()
 
 def evaluateweek(request):
+    executor = ThreadPoolExecutor(max_workers=10)
     for i in users.objects.all():
-        name=i.user_name
-        url="https://leetcode-stats-api.herokuapp.com/"+name
-        obj= requests.get(url).json()
-        total=obj["totalSolved"]
-        i.week=total-i.totalweek
-        i.save()
-    return HttpResponse("success")
+        executor.submit(func4,i)
+    executor.shutdown(wait=True)
+    return HttpResponse("Successfuldone")
 
