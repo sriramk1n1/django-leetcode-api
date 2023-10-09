@@ -32,6 +32,7 @@ def leaderboard(request):
     dict={}
     j=1
     for i in list(users.objects.order_by("-today").values()):
+        i["week"]+=i["today"]
         dict[j]=i
         j+=1
     return JsonResponse(dict)
@@ -43,6 +44,7 @@ def leaderboardall(request):
     dict={}
     j=1
     for i in list(users.objects.order_by("-total").values()):
+        i["week"]+=i["today"]
         dict[j]=i
         j+=1
     return JsonResponse(dict)
@@ -51,6 +53,7 @@ def leaderboardweek(request):
     dict={}
     j=1
     for i in list(users.objects.order_by("-week").values()):
+        i["week"]+=i["today"]
         dict[j]=i
         j+=1
     return JsonResponse(dict)
