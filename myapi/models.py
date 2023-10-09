@@ -32,6 +32,7 @@ class dsa(models.Model):
     r3=models.URLField(max_length=150,blank=True,null=True)
     r4=models.URLField(max_length=150,blank=True,null=True)
     r5=models.URLField(max_length=150,blank=True,null=True)
+    
 
     def __str__(self):
         return "Week " + str(self.weekno)
