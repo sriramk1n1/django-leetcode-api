@@ -3,13 +3,9 @@ from django.db import models
 # Create your models here.
 
 class users(models.Model):
-    name = models.CharField(max_length=30,blank=True,null=True)
-    email= models.CharField(max_length=30,blank=True,null=True)
     user_name=models.CharField(max_length=20)
     total=models.IntegerField(blank=True,null=True)
     today=models.IntegerField(default=0)
-    totalweek=models.IntegerField(default=0)
-    week=models.IntegerField(default=0)
     def __str__(self):
         return self.user_name
     
