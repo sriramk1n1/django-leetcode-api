@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import dsa,users,visits
+from .models import dsa,users
 from django.http import HttpResponse, JsonResponse
 import requests
 import json
@@ -7,13 +7,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 
 
-def index(request):
-    return HttpResponse("API for questions-list.vercel.app")
-
 def week(request):
-    v=visits.objects.get(id=1)
-    v.no+=1
-    v.save()
     dict={} 
     j=1
     id="id"+str(j)
@@ -25,38 +19,15 @@ def week(request):
     
     
     
-def leaderboard(request):
-    v=visits.objects.get(id=2)
-    v.no+=1
-    v.save()
+def leaderboardall(request):
     dict={}
     j=1
-    for i in list(users.objects.order_by("-today").values()):
-        i["week"]+=i["today"]
+    for i in list(users.objects.order_by("-today","-total").values()):
         dict[j]=i
         j+=1
     return JsonResponse(dict)
     
-def leaderboardall(request):
-    v=visits.objects.get(id=3)
-    v.no+=1
-    v.save()
-    dict={}
-    j=1
-    for i in list(users.objects.order_by("-total").values()):
-        i["week"]+=i["today"]
-        dict[j]=i
-        j+=1
-    return JsonResponse(dict)
 
-def leaderboardweek(request):
-    dict={}
-    j=1
-    for i in list(users.objects.order_by("-week").values()):
-        i["week"]+=i["today"]
-        dict[j]=i
-        j+=1
-    return JsonResponse(dict)
 
 def func1(i):
     name=i.user_name
@@ -69,20 +40,6 @@ def sync(request):
     executor = ThreadPoolExecutor(max_workers=10)
     for i in users.objects.all():
         executor.submit(func1,i)
-    executor.shutdown(wait=True)
-    return HttpResponse("Successfuldone")
-
-def func2(i):
-    name=i.user_name
-    url="http://127.0.0.1:8080/"+name
-    obj = requests.get(url).json()
-    i.totalweek=obj["totalSolved"]
-    i.save()
-    
-def syncweek(request):
-    executor = ThreadPoolExecutor(max_workers=10)
-    for i in users.objects.all():
-        executor.submit(func2,i)
     executor.shutdown(wait=True)
     return HttpResponse("Successfuldone")
 
@@ -101,18 +58,3 @@ def evaluate(request):
     executor.shutdown(wait=True)
     return HttpResponse("Successfuldone")
         
-def func4(i):
-    name=i.user_name
-    url="http://127.0.0.1:8080/"+name
-    obj= requests.get(url).json()
-    total=obj["totalSolved"]
-    i.week=total-i.totalweek
-    i.save()
-
-def evaluateweek(request):
-    executor = ThreadPoolExecutor(max_workers=10)
-    for i in users.objects.all():
-        executor.submit(func4,i)
-    executor.shutdown(wait=True)
-    return HttpResponse("Successfuldone")
-
